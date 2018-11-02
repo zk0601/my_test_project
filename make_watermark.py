@@ -4,12 +4,12 @@ import datetime
 import shutil
 
 Current_Path = os.path.dirname(__file__)
-Baby_picture = os.path.join(Current_Path, "7months.jpg")
+Baby_picture = os.path.join(Current_Path, "4months.jpg")
 Out_picture = os.path.join(Current_Path, 'out.jpg')
-TTF_Font = os.path.join(Current_Path, 'MY.TTF')
-Color_Font = "#21ACDA"
-Transparency = 0.8
-# Color_Font = '#F5F5F5'
+TTF_Font = os.path.join(Current_Path, 'MY1.TTF')
+Color_Font = "#F5F5F5"
+Transparency = 0.63
+
 
 class MakeWatermark(object):
     def __init__(self, birthday=None, weight=None, height=None):
@@ -46,31 +46,32 @@ class MakeWatermark(object):
         return count / 3
 
     def main(self, input, output):
+        Month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         img = Image.open(input)
         temp_file = os.path.join(Current_Path, "temp.jpg")
         img_width = img.size[0]
         img_height = img.size[1]
         size = int(img_width / 20)
+        date_str = "%s.%s" % (Month[datetime.datetime.now().month-1], datetime.datetime.now().day)
+        self.txt_draw(date_str, size, size, img_height - size * 3 - int(img_height / 20), input, temp_file)
         if self.birthday and self.height and self.weight:
             text = "宝宝的第%s天" % self.total_days()
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size-int(img_height / 20), input, temp_file)
-            text = "%s斤" % self.weight
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size*2-int(img_height / 20), temp_file, temp_file)
-            text = "%s公分" % self.height
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size*3-int(img_height / 20), temp_file, output)
+            self.txt_draw(text, size, size, img_height-size*2-int(img_height / 20), temp_file, temp_file)
+            text = "%skg,  %scm" % (self.weight, self.height)
+            self.txt_draw(text, size, size, img_height-size-int(img_height / 20), temp_file, output)
         elif self.birthday and ( not self.height and not self.weight):
             text = "宝宝的第%s天" % self.total_days()
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size-int(img_height / 20), input, output)
+            self.txt_draw(text, size, size, img_height-size-int(img_height / 20), temp_file, output)
         elif self.birthday and self.weight:
             text = "宝宝的第%s天" % self.total_days()
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size-int(img_height / 20), input, temp_file)
-            text = "%s斤" % self.weight
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size*2-int(img_height / 20), temp_file, output)
+            self.txt_draw(text, size, size, img_height-size*2-int(img_height / 20), temp_file, temp_file)
+            text = "%skg" % self.weight
+            self.txt_draw(text, size, size, img_height-size-int(img_height / 20), temp_file, output)
         elif self.birthday and self.height:
             text = "宝宝的第%s天" % self.total_days()
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size-int(img_height / 20), input, temp_file)
-            text = "%s公分" % self.height
-            self.txt_draw(text, size, int(img_width-size*(self.get_str_len(text)+1)), img_height-size*2-int(img_height / 20), temp_file, output)
+            self.txt_draw(text, size, size, img_height-size*2-int(img_height / 20), temp_file, temp_file)
+            text = "%scm" % self.height
+            self.txt_draw(text, size, size, img_height-size-int(img_height / 20), temp_file, output)
         else:
             shutil.copy(input, output)
 
