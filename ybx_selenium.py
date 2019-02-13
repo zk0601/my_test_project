@@ -69,24 +69,30 @@ def get_page_num(url):
             a = page.find_element(By.CSS_SELECTOR, 'a')
             a.click()
     next_page = browser.find_elements(By.CSS_SELECTOR, '.page-control .pagination li')
-    return int(next_page[-1].text)
+    result = next_page[-1].text
+    browser.close()
+    return int(result)
 
 
 def main(url, ip, port, page_num=1):
     option = webdriver.ChromeOptions()
     option.add_argument('--no-sandbox')
     option.add_argument('--headless')
+    option.add_argument('Connection=close')
     option.add_argument("--proxy-server=http://%s:%s" % (ip, port))
     browser = webdriver.Chrome(chrome_options=option)
 
     i = 1
     try:
         browser.get(url)
+        time.sleep(5)
         login(browser)
         time.sleep(3)
         while i <= page_num:
             try:
                 questions = browser.find_elements(By.CSS_SELECTOR, '.aw-common-list div .aw-question-content h4')
+                if not questions:
+                    continue
                 j = random.randint(0, 49)
                 question = questions[j]
                 href = question.find_element(By.CSS_SELECTOR, 'a')
@@ -102,7 +108,12 @@ def main(url, ip, port, page_num=1):
                 for agreement in agreements:
                     if agreement.get_attribute('class') != 'agree active ':
                         agreement.click()
-                browser.back()
+                try:
+                    browser.back()
+                except Exception as e:
+                    print(e, e.__traceback__.tb_lineno)
+                    browser.close()
+                    return
                 next_page = browser.find_elements(By.CSS_SELECTOR, '.page-control .pagination li')
                 i += 1
                 for page in next_page:
@@ -113,37 +124,45 @@ def main(url, ip, port, page_num=1):
                         break
                 time.sleep(1)
             except Exception as e:
-                print(e)
+                print(e, e.__traceback__.tb_lineno)
                 i += 1
                 continue
         time.sleep(3)
 
     except Exception as e:
-        print(e)
-        browser.close()
+        print(e, e.__traceback__.tb_lineno)
+        time.sleep(30)
+        return
 
     finally:
         browser.close()
 
 
 def get_ip():
-    url = 'http://http.tiqu.qingjuhe.cn/getip?num=80&type=2&pro=0&city=0&yys=0&port=1&pack=25861&ts=0&ys=0&cs=0&lb=1&sb=0&pb=45&mr=0&regions='
+    # url = 'http://http.tiqu.qingjuhe.cn/getip?num=2&type=2&pro=0&city=0&yys=0&port=1&pack=25861&ts=0&ys=0&cs=0&lb=1&sb=0&pb=45&mr=0&regions='
+    url = 'http://http.tiqu.qingjuhe.cn/getip?num=2&type=2&pro=0&city=0&yys=0&port=1&pack=26883&ts=0&ys=0&cs=0&lb=1&sb=0&pb=45&mr=0&regions='
     res = requests.get(url)
     return res.json()
 
 
 if __name__ == '__main__':
     print("start time:", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-    ip_list = get_ip()['data']
+    ip_list = get_ip()
+    print(ip_list)
+    ip_list = ip_list['data']
     print(ip_list)
     end = len(ip_list) - 1
     page_num = get_page_num('http://www.ybx.com/explore/')
     print(page_num)
     user_number = int(sys.argv[1])
-    for _ in range(0, user_number):
+    for _ in range(1, user_number+1):
         ip_info = ip_list[random.randint(0, end)]
+        print("第%s位用户开始登陆" % _)
+        print(ip_info)
         main('http://www.ybx.com/explore/', ip_info['ip'], ip_info['port'], page_num)
-    for _ in range(0, user_number):
+    for _ in range(1, user_number+1):
+        print("第%s位用户开始登陆" % (_+user_number))
         ip_info = ip_list[random.randint(0, end)]
+        print(ip_info)
         main('http://m.ybx.com/explore/', ip_info['ip'], ip_info['port'], page_num)
     print("end time:", datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"))

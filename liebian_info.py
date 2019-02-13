@@ -32,7 +32,7 @@ def main():
                            pool_recycle=3600, echo=False, echo_pool=False)
     session = scoped_session(sessionmaker(bind=engine, autocommit=False))
 
-    items = session.query(Relation).filter(Relation.activity_id == 8).all()
+    items = session.query(Relation).filter(Relation.activity_id == 8, Relation.parent_id != 0).all()
 
     print("总共扫码数:", len(items))
     result = dict()
