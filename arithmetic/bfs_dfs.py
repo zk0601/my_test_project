@@ -98,4 +98,5 @@ def Dijkstra(graph, s, ss):
         result.append(ss)
         ss = parent_distance[ss][0]
 
+
 print(Dijkstra(graph, 'A', 'F'))
