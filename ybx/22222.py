@@ -25,7 +25,7 @@ class User_Base(Base):
 
 def main():
     database_url = 'mysql+mysqldb://{}:{}@{}/{}?charset=utf8'.format('root', '4608310zk',
-                                                                             '47.75.49.133', 'youbao')
+                                                                             '47.75.49.133', 'youbao_sql')
     engine = create_engine(database_url, encoding='utf8', pool_size=20,
                            pool_recycle=3600, echo=False, echo_pool=False)
     session = scoped_session(sessionmaker(bind=engine, autocommit=False))
