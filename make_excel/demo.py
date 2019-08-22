@@ -183,8 +183,8 @@ class Command(BaseCommand):
         worksheet = workbook.add_sheet(today)
 
         # 调整列宽
-        first_col = worksheet.col(0)
-        first_col.width = 256 * 20
+        for i in range(30):
+            worksheet.col(i).width = 256 * 20
 
         # 构造模板
         worksheet.write_merge(0, 0, 0, 3, '城市', self.blue_style)
