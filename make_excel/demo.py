@@ -181,6 +181,11 @@ class Command(BaseCommand):
         workbook = xlwt.Workbook(encoding='utf8')
         today = datetime.datetime.now().strftime('%Y-%m-%d')
         worksheet = workbook.add_sheet(today)
+
+        # 调整列宽
+        first_col = worksheet.col(0)
+        first_col.width = 256 * 20
+
         # 构造模板
         worksheet.write_merge(0, 0, 0, 3, '城市', self.blue_style)
         for index, city in enumerate(self.city_list):
