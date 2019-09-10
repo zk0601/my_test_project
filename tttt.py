@@ -1,3 +1,4 @@
+import copy
 
 class ListNode:
     def __init__(self, x):
@@ -112,20 +113,69 @@ class Solution:
     def longestcommonsubsequence(self, str1, str2):
         m, n = len(str1), len(str2)
         dp = [[0] * (n+1) for _ in range(m+1)]
+        s = [[0] * (n+1) for _ in range(m+1)]
         for i in range(1, m+1):
             for j in range(1, n+1):
                 if str1[i-1] == str2[j-1]:
                     dp[i][j] = dp[i-1][j-1] + 1
+                    s[i][j] = 1
                 else:
                     dp[i][j] = max(dp[i][j-1], dp[i-1][j], dp[i-1][j-1])
-        return dp[-1][-1]
+                    if dp[i][j] == dp[i][j-1]:
+                        s[i][j] = 2
+                    elif dp[i][j] == dp[i-1][j]:
+                        s[i][j] = 3
+        rs = []
+        i, j = m, n
+        while i >= 1 and j >= 1:
+            if s[i][j] == 1:
+                rs.append(str1[i-1])
+                i = i-1
+                j = j-1
+            elif s[i][j] == 2:
+                j = j-1
+            elif s[i][j] == 3:
+                i = i-1
+            else:
+                i = i-1
+                j = j-1
+        return ''.join(reversed(rs))
+        # return dp[-1][-1]
 
     def solveNQueens(self, n):
-        pass
+        map = [['.'] * n for _ in range(n)]
+        rs = []
+        self.next_queen(map, 0, rs)
+        for item in rs:
+            for row in range(len(item)):
+                item[row] = ''.join(item[row])
+        return rs
+
+    def next_queen(self, map, row, rs):
+        n = len(map)
+        if row == n:
+            rs.append(copy.deepcopy(map))
+        for i in range(n):
+            if self.queeen_valid(map, row, i):
+                map[row][i] = 'Q'
+                self.next_queen(map, row+1, rs)
+                map[row][i] = '.'
+
+    def queeen_valid(self, map, row, col):
+        for i in range(row):
+            if map[i][col] == 'Q':
+                return False
+        for i in range(row+1):
+            if col - i >= 0 and map[row-i][col-i] == 'Q':
+                return False
+            if col + i <= len(map)-1 and map[row-i][col+i] == 'Q':
+                return False
+        return True
+
 
 if __name__ == '__main__':
-    a = 'fsda'
-    b = 'aacesdfsd'
+    a = 'abcdeffg'
+    b = 'gfaceg'
     aa = Solution()
     print(aa.longestcommonsubsequence(a, b))
 
