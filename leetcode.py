@@ -174,8 +174,6 @@ class Solution:
 
 
 if __name__ == '__main__':
-    a = 'abcdeffg'
-    b = 'gfaceg'
     aa = Solution()
-    print(aa.longestcommonsubsequence(a, b))
+    print(aa.solveNQueens(4))
 

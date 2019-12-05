@@ -19,7 +19,8 @@ class TaoBao(object):
         #         'images': 2
         #     }
         # }
-        # option.add_experimental_option('prefs', prefs)
+        # option.add_experimental_option('prefs', prefs)  #不加载图片
+        # option.set_preference('permissions.default.stylesheet', 2)  #不加载css
         browser = webdriver.Chrome(chrome_options=option)
         browser.get('https://www.taobao.com/')
         if browser.find_element_by_link_text("亲，请登录"):
@@ -52,7 +53,7 @@ class TaoBao(object):
                 except:
                     time.sleep(0.1)
                     continue
-            time.sleep(0.5)
+            time.sleep(0.1)
 
 
 if __name__ == '__main__':
