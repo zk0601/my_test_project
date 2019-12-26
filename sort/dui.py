@@ -2,6 +2,7 @@
 
 l = [4,5,6,7,3,2,6,9,8,1]
 
+
 def heapify(l, i):
     lenght = len(l)
     if i >= lenght:
@@ -17,7 +18,7 @@ def heapify(l, i):
 
 def build_tree(l):
     last_root = (len(l)-2) // 2
-    for i in range(last_root,-1, -1):
+    for i in range(last_root, -1, -1):
         heapify(l, i)
 
 
