@@ -172,6 +172,8 @@ class Solution:
                 return False
         return True
 
+    def crackSafe(self, n, k):
+        pass
 
 if __name__ == '__main__':
     aa = Solution()
