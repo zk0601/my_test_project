@@ -175,6 +175,7 @@ class Solution:
     def crackSafe(self, n, k):
         pass
 
+
 if __name__ == '__main__':
     aa = Solution()
     print(aa.solveNQueens(4))
