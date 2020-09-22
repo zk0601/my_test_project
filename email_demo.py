@@ -5,9 +5,9 @@ import os
 import time
 import re
 import smtplib
-from email.mime.text import MIMEText
-from email.header import Header
-from email.mime.multipart import MIMEMultipart
+from email_demo.mime.text import MIMEText
+from email_demo.header import Header
+from email_demo.mime.multipart import MIMEMultipart
 
 
 log_file = '/var/log/mysql/mysql_slow_query.log'
@@ -52,7 +52,7 @@ def send_email(text):
     smtp.set_debuglevel(True)
     smtp.login(mail_user, mail_pass)
     smtp.sendmail(sender, receivers, message.as_string())
-    print "邮件发送成功"
+    print("邮件发送成功")
 
 
 def main():
