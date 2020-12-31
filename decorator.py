@@ -1,30 +1,29 @@
-from functools import wraps
-
-
-# 普通的简单装饰器
 def decorator(func):
-    def inter(*args, **kwargs):
-        func(*args, **kwargs)
-        print('1')
-    return inter
+    def wrap(a, *args, **kwargs):
+        print('555')
+        if a == 1:
+            return tt()
+        else:
+            return func(a, *args, **kwargs)
+    return wrap
 
 
-# 使得fun的__name__和__doc__正常显示
-def decorator1(func):
-    @wraps(func)
-    def inter(*args, **kwargs):
-        func(*args, **kwargs)
-        print('1')
-    return inter
+def ppp(func):
+    def warp(a, *args, **kwargs):
+        print('3333')
+        return func(a, *args, **kwargs)
+    return warp
+
+# 第一个返回func则继续执行下一个decorator，否则则不执行下一个
+@decorator
+@ppp
+def test(a):
+    print(a)
 
 
-@decorator1
-def work(a, b='b', **kwargs):
-    print(a, b)
-    print(**kwargs)
+def tt():
+    print('2222')
 
 
 if __name__ == '__main__':
-    work('a')
-    print(work.__name__)
-    raise ImportError
+    test(1)
